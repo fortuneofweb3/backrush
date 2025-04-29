@@ -3,50 +3,177 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Authentication Callback - Backrush</title>
+  <title>Backrush: BR-482 Callback</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
+    /* Base styles for the callback screen */
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .message {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      color: #333;
-    }
-    .start-game-button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      font-weight: bold;
+      background-color: #050A0F;
       color: white;
-      background-color: #f97316; /* Orange color to match theme */
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
     }
-    .start-game-button:hover {
-      background-color: #ea580c;
+
+    /* The eerie green scan line */
+    .scan-line {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        rgba(0,255,0,0) 0%, 
+        rgba(0,255,0,0.8) 50%, 
+        rgba(0,255,0,0) 100%);
+      box-shadow: 0 0 15px 2px #00ff00;
+      animation: scanline-drift 3s infinite ease-in-out;
+    }
+
+    /* Message text */
+    .message {
+      font-size: 1.5rem;
+      color: #00FF00;
+      text-shadow: 0 0 10px #00FF00;
+      text-align: center;
+      margin-bottom: 2rem;
+      max-width: 80%;
+      letter-spacing: 1px;
+      animation: text-flicker 0.3s infinite alternate, glitch-skew 2s infinite;
+    }
+
+    /* Start Game button */
+    .start-game-button {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: #00FF00;
+      background-color: transparent;
+      border: 3px solid #00FF00;
+      padding: 1.5rem 3rem;
+      border-radius: 10px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px #00FF00;
+      box-shadow: 0 0 20px #00FF00, inset 0 0 10px #00FF00;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulse-glow 1.5s infinite, text-flicker 0.4s infinite alternate, glitch-skew 3s infinite;
+    }
+    .start-game-button:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #00FF00, inset 0 0 15px #00FF00;
+      border-color: #FF5500;
     }
     .start-game-button:disabled {
-      background-color: #d1d5db;
+      color: #666666;
+      border-color: #666666;
+      text-shadow: none;
+      box-shadow: none;
       cursor: not-allowed;
+      animation: none;
+    }
+
+    /* Digital noise overlay effect */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQImWM4ePDgfwYGBgYGBgYGBgYGhoaGhoaGhoaGhoaG/wG7bAJuN4z8AAAAAElFTkSuQmCC');
+      opacity: 0.15;
+      pointer-events: none;
+      animation: noise 0.1s infinite;
+    }
+
+    /* Glitch burst effect around button */
+    .glitch-burst {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0,255,0,0.2) 0%, transparent 70%);
+      opacity: 0;
+      animation: glitch-burst 5s infinite;
+    }
+
+    /* Animations */
+    @keyframes text-flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 20px #00FF00, inset 0 0 10px #00FF00; }
+      50% { box-shadow: 0 0 30px #00FF00, inset 0 0 15px #00FF00; }
+      100% { box-shadow: 0 0 20px #00FF00, inset 0 0 10px #00FF00; }
+    }
+
+    @keyframes glitch-skew {
+      0% { transform: skew(0deg, 0deg); }
+      10% { transform: skew(0.5deg, 0.2deg); }
+      20% { transform: skew(-0.5deg, -0.2deg); }
+      30% { transform: skew(0.3deg, 0deg); }
+      40% { transform: skew(-0.3deg, 0.1deg); }
+      50% { transform: skew(0deg, 0deg); }
+      100% { transform: skew(0deg, 0deg); }
+    }
+
+    @keyframes scanline-drift {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(5px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+
+    @keyframes noise {
+      0% { background-position: 0 0; }
+      100% { background-position: 100px 100px; }
+    }
+
+    @keyframes glitch-burst {
+      0% { opacity: 0; }
+      5% { opacity: 0.3; }
+      10% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .message {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+      .start-game-button {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .message {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+      .start-game-button {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div>
-    <div id="message" class="message">Processing authentication...</div>
-    <button id="start-game-button" class="start-game-button" disabled>Start Game</button>
-  </div>
+  <div class="noise-overlay"></div>
+  <div class="glitch-burst"></div>
+  <div class="scan-line"></div>
+  <div id="message" class="message">Processing authentication...</div>
+  <button id="start-game-button" class="start-game-button" disabled>Start Game</button>
 
   <!-- Required Dependencies -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -55,26 +182,22 @@
   <!-- Initialization Script -->
   <script>
     (function () {
-      // Ensure required libraries are loaded
       if (!window.React || !window.ReactDOM || !window.Bedrock) {
         console.error('Error: Required libraries failed to load.');
         document.getElementById('message').textContent =
-          'Error loading authentication widget. Please check your internet connection.';
+          'BR-482: NEURAL INTERFACE ERROR - AUTHENTICATION MODULE FAILURE';
         return;
       }
 
-      // Configuration
       const bedrockConfig = {
         baseUrl: 'https://api.bedrockpassport.com',
         authCallbackUrl: 'https://backrush.netlify.app/auth/callback',
         tenantId: 'orange-yx4pi0d2zo',
       };
 
-      // Container for React rendering
       const container = document.getElementById('message');
       const root = ReactDOM.createRoot(container);
 
-      // Get token and refreshToken from URL
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
       const refreshToken = params.get('refreshToken');
@@ -84,10 +207,9 @@
         return;
       }
 
-      // Callback processor component
       function AuthCallbackProcessor() {
         const { loginCallback } = Bedrock.useBedrockPassport();
-        const [message, setMessage] = React.useState('Verifying tokens...');
+        const [message, setMessage] = React.useState('Processing authentication...');
 
         React.useEffect(() => {
           async function processLogin() {
@@ -95,9 +217,7 @@
               const success = await loginCallback(token, refreshToken);
               if (success) {
                 setMessage('Login successful!');
-                // Remove token parameters from URL
                 window.history.replaceState({}, document.title, window.location.pathname);
-                // Enable Start Game button
                 document.getElementById('start-game-button').disabled = false;
               } else {
                 setMessage('Authentication failed. Please try again.');
@@ -113,7 +233,6 @@
         return message;
       }
 
-      // Render callback processor
       root.render(
         React.createElement(
           Bedrock.BedrockPassportProvider,
@@ -122,7 +241,6 @@
         )
       );
 
-      // Add event listener for Start Game button
       document.getElementById('start-game-button').addEventListener('click', () => {
         window.location.href = 'https://dev.fun/p/e2074354891bd9ec9f29';
       });
