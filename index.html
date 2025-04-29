@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orange ID Demo - Backrush</title>
+  <title>Backrush</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -33,8 +33,8 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Orange ID Demo</h1>
-      <p>Sign in to Backrush using Orange ID.</p>
+      <h1>Backrush</h1>
+      <p>Sign in to Backrush</p>
     </div>
     <div id="bedrock-login-widget"></div>
   </div>
@@ -48,7 +48,6 @@
   <!-- Initialization Script -->
   <script>
     (function () {
-      // Ensure required libraries are loaded
       if (!window.React || !window.ReactDOM || !window.Bedrock) {
         console.error('Error: Required libraries failed to load.');
         document.getElementById('bedrock-login-widget').innerHTML =
@@ -56,29 +55,24 @@
         return;
       }
 
-      // Configuration
       const bedrockConfig = {
         baseUrl: 'https://api.bedrockpassport.com',
         authCallbackUrl: 'https://backrush.netlify.app/auth/callback',
         tenantId: 'orange-yx4pi0d2zo',
       };
 
-      // Container for widget
       const container = document.getElementById('bedrock-login-widget');
       const root = ReactDOM.createRoot(container);
 
-      // Check if we're handling a callback (should not happen on this page)
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
       const refreshToken = params.get('refreshToken');
 
       if (token && refreshToken) {
-        // Redirect to callback page if tokens are present
         window.location.href = `/auth/callback?token=${token}&refreshToken=${refreshToken}`;
         return;
       }
 
-      // Normal login flow
       root.render(
         React.createElement(
           Bedrock.BedrockPassportProvider,
