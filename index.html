@@ -3,38 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Backrush</title>
+  <title>Backrush: BR-482</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #f5f5f5;
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: #050A0F;
+      color: #FFFFFF;
       margin: 0;
       padding: 0;
+      overflow: hidden;
+      position: relative;
     }
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
+      text-align: center;
     }
     .header {
-      text-align: center;
       margin-bottom: 2rem;
+    }
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00FF00;
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+      letter-spacing: 0.1em;
+      transform: scaleX(1.05); /* Subtle horizontal stretch */
+    }
+    .header p {
+      font-size: 1rem;
+      color: #FFFFFF;
+      margin-top: 0.5rem;
+    }
+    .header p span.required {
+      color: #FF5500;
+      font-weight: bold;
     }
     #bedrock-login-widget {
       max-width: 400px;
       margin: 0 auto;
-      background-color: white;
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00FF00;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 1.5rem;
+      box-shadow: 0 0 15px #00FF00;
+    }
+    .error-message {
+      color: #00FF00;
+      text-shadow: 0 0 5px #00FF00;
+      font-size: 1.2rem;
+      animation: flicker 0.5s infinite alternate;
+    }
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #00FF00, transparent);
+      animation: scan 4s linear infinite;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100vh); }
     }
   </style>
 </head>
 <body>
+  <div class="scan-line"></div>
   <div class="container">
     <div class="header">
-      <h1>Backrush</h1>
-      <p>Sign in to Backrush</p>
+      <h1>BACKRUSH: BR-482</h1>
+      <p>NEURAL INTERFACE <span class="required">REQUIRED</span></p>
     </div>
     <div id="bedrock-login-widget"></div>
   </div>
@@ -51,7 +98,7 @@
       if (!window.React || !window.ReactDOM || !window.Bedrock) {
         console.error('Error: Required libraries failed to load.');
         document.getElementById('bedrock-login-widget').innerHTML =
-          '<div style="color: red; text-align: center;">Error loading authentication widget. Please check your internet connection.</div>';
+          '<div class="error-message">BR-482: NEURAL INTERFACE ERROR - AUTHENTICATION MODULE FAILURE</div>';
         return;
       }
 
@@ -78,7 +125,7 @@
           Bedrock.BedrockPassportProvider,
           bedrockConfig,
           React.createElement(Bedrock.LoginPanel, {
-            title: "Sign in to",
+            title: "INTERFACE AUTHENTICATION",
             logo: "https://irp.cdn-website.com/e81c109a/dms3rep/multi/orange-web3-logo-v2a-20241018.svg",
             logoAlt: "Orange Web3",
             walletButtonText: "Connect Wallet",
@@ -90,12 +137,12 @@
               enableGoogleLogin: true,
               enableEmailLogin: true,
             },
-            titleClass: "text-xl font-bold",
+            titleClass: "text-xl font-bold text-white",
             logoClass: "ml-2 md:h-8 h-6",
             panelClass: "container p-2 md:p-8 rounded-2xl max-w-[480px]",
-            buttonClass: "hover:border-orange-500",
-            separatorTextClass: "bg-orange-900 text-gray-500",
-            separatorClass: "bg-orange-900",
+            buttonClass: "hover:border-orange-500 bg-[#050A0F] text-white border-[#00FF00]",
+            separatorTextClass: "text-gray-500",
+            separatorClass: "bg-[#00FF00]",
             linkRowClass: "justify-center",
             headerClass: "justify-center",
           })
