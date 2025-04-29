@@ -34,6 +34,7 @@
         rgba(0,255,0,0) 100%);
       box-shadow: 0 0 15px 2px #00ff00;
       animation: scanline-drift 3s infinite ease-in-out;
+      z-index: 1;
     }
 
     /* Message text */
@@ -46,6 +47,7 @@
       max-width: 80%;
       letter-spacing: 1px;
       animation: text-flicker 0.3s infinite alternate, glitch-skew 2s infinite;
+      z-index: 2;
     }
 
     /* Start Game button */
@@ -63,6 +65,8 @@
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       animation: pulse-glow 1.5s infinite, text-flicker 0.4s infinite alternate, glitch-skew 3s infinite;
+      z-index: 2;
+      position: relative;
     }
     .start-game-button:hover:not(:disabled) {
       transform: scale(1.05);
@@ -89,9 +93,10 @@
       opacity: 0.15;
       pointer-events: none;
       animation: noise 0.1s infinite;
+      z-index: 1;
     }
 
-    /* Glitch burst effect around button */
+    /* Glitch burst effect */
     .glitch-burst {
       position: absolute;
       top: 0;
@@ -101,6 +106,7 @@
       background: radial-gradient(circle, rgba(0,255,0,0.2) 0%, transparent 70%);
       opacity: 0;
       animation: glitch-burst 5s infinite;
+      z-index: 1;
     }
 
     /* Animations */
@@ -203,6 +209,7 @@
       const refreshToken = params.get('refreshToken');
 
       if (!token || !refreshToken) {
+        console.log('Missing token or refreshToken');
         root.render('No authentication tokens found. Please try signing in again.');
         return;
       }
@@ -214,12 +221,15 @@
         React.useEffect(() => {
           async function processLogin() {
             try {
+              console.log('Processing login with token:', token);
               const success = await loginCallback(token, refreshToken);
               if (success) {
+                console.log('Login successful');
                 setMessage('Login successful!');
                 window.history.replaceState({}, document.title, window.location.pathname);
                 document.getElementById('start-game-button').disabled = false;
               } else {
+                console.log('Authentication failed');
                 setMessage('Authentication failed. Please try again.');
               }
             } catch (error) {
@@ -241,7 +251,9 @@
         )
       );
 
-      document.getElementById('start-game-button').addEventListener('click', () => {
+      const startGameButton = document.getElementById('start-game-button');
+      startGameButton.addEventListener('click', () => {
+        console.log('Start Game button clicked');
         window.location.href = 'https://dev.fun/p/e2074354891bd9ec9f29';
       });
     })();
