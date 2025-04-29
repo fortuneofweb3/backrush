@@ -6,85 +6,209 @@
   <title>Backrush: BR-482</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
+    /* Base styles for the error screen */
     body {
-      font-family: 'IBM Plex Mono', monospace;
       background-color: #050A0F;
-      color: #FFFFFF;
+      color: white;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       margin: 0;
-      padding: 0;
       overflow: hidden;
       position: relative;
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
-    }
-    .header {
-      margin-bottom: 2rem;
-    }
-    .header h1 {
-      font-family: 'Orbitron', sans-serif;
-      color: #00FF00;
-      font-size: 2.5rem;
-      text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
-      letter-spacing: 0.1em;
-      transform: scaleX(1.05); /* Subtle horizontal stretch */
-    }
-    .header p {
-      font-size: 1rem;
-      color: #FFFFFF;
-      margin-top: 0.5rem;
-    }
-    .header p span.required {
-      color: #FF5500;
-      font-weight: bold;
-    }
-    #bedrock-login-widget {
-      max-width: 400px;
-      margin: 0 auto;
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 2px solid #00FF00;
-      border-radius: 8px;
-      padding: 1.5rem;
-      box-shadow: 0 0 15px #00FF00;
-    }
-    .error-message {
-      color: #00FF00;
-      text-shadow: 0 0 5px #00FF00;
-      font-size: 1.2rem;
-      animation: flicker 0.5s infinite alternate;
-    }
+
+    /* The eerie green scan line */
     .scan-line {
       position: absolute;
-      top: 0;
+      top: 50px;
       left: 0;
       width: 100%;
       height: 2px;
-      background: linear-gradient(to right, transparent, #00FF00, transparent);
-      animation: scan 4s linear infinite;
+      background: linear-gradient(90deg, 
+        rgba(0,255,0,0) 0%, 
+        rgba(0,255,0,0.8) 50%, 
+        rgba(0,255,0,0) 100%);
+      box-shadow: 0 0 15px 2px #00ff00;
+      animation: scanline-drift 3s infinite ease-in-out;
     }
-    @keyframes flicker {
+
+    /* The main error title with glow */
+    .error-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: #00FF00;
+      text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+      animation: text-flicker 4s infinite;
+      text-align: center;
+    }
+
+    /* The critical error message */
+    .error-message {
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      max-width: 80%;
+      letter-spacing: 1px;
+      color: #00FF00;
+      text-shadow: 0 0 5px #00FF00;
+      animation: subtle-distort 7s infinite;
+    }
+
+    /* The orange required text */
+    .required-text {
+      color: #FF5500;
+      font-size: 1.3rem;
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
+      animation: warning-pulse 2s infinite;
+    }
+
+    /* The status box for the login widget */
+    .status-box {
+      border: 1px solid #00FF00;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+      animation: border-flicker 3s infinite;
+      background-color: rgba(0, 0, 0, 0.8);
+      max-width: 480px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Digital noise overlay effect */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAJElEQVQImWM4ePDgfwYGBgYGBgYGBgYGhoaGhoaGhoaGhoaG/wG7bAJuN4z8AAAAAElFTkSuQmCC');
+      opacity: 0.1;
+      pointer-events: none;
+      animation: noise 0.1s infinite;
+    }
+
+    /* Animations */
+    @keyframes text-flicker {
       0% { opacity: 1; }
-      50% { opacity: 0.7; }
+      3% { opacity: 0.8; }
+      6% { opacity: 1; }
+      7% { opacity: 0.9; }
+      8% { opacity: 1; }
+      9% { opacity: 1; }
+      10% { opacity: 0.9; }
+      20% { opacity: 1; }
+      50% { opacity: 1; }
+      70% { opacity: 0.7; }
+      72% { opacity: 1; }
+      77% { opacity: 0.9; }
       100% { opacity: 1; }
     }
-    @keyframes scan {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(100vh); }
+
+    @keyframes border-flicker {
+      0% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+      25% { box-shadow: 0 0 12px rgba(0, 255, 0, 0.5); }
+      50% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+      75% { box-shadow: 0 0 8px rgba(0, 255, 0, 0.2); }
+      100% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+    }
+
+    @keyframes warning-pulse {
+      0% { text-shadow: 0 0 5px rgba(255, 85, 0, 0.5); }
+      50% { text-shadow: 0 0 10px rgba(255, 85, 0, 0.8); }
+      100% { text-shadow: 0 0 5px rgba(255, 85, 0, 0.5); }
+    }
+
+    @keyframes scanline-drift {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(5px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+
+    @keyframes subtle-distort {
+      0% { transform: skew(0deg, 0deg); }
+      25% { transform: skew(0.1deg, 0deg); }
+      50% { transform: skew(0deg, 0.1deg); }
+      75% { transform: skew(-0.1deg, 0deg); }
+      100% { transform: skew(0deg, 0deg); }
+    }
+
+    @keyframes noise {
+      0% { background-position: 0 0; }
+      100% { background-position: 100px 100px; }
+    }
+
+    /* Ensure widget buttons align with Backrooms aesthetic */
+    #bedrock-login-widget button {
+      background-color: #050A0F !important;
+      border-color: #00FF00 !important;
+      color: #FFFFFF !important;
+      transition: border-color 0.3s;
+    }
+    #bedrock-login-widget button:hover {
+      border-color: #FF5500 !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .error-title {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+      .required-text {
+        font-size: 1rem;
+        margin: 0.5rem 0;
+      }
+      .status-box {
+        padding: 10px;
+        max-width: 90%;
+      }
+      #bedrock-login-widget {
+        padding: 1rem !important;
+      }
+      #bedrock-login-widget .p-6 {
+        padding: 1rem !important;
+      }
+      #bedrock-login-widget .text-xl {
+        font-size: 1.2rem !important;
+      }
+      #bedrock-login-widget .md\\:h-8 {
+        height: 1.5rem !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .error-title {
+        font-size: 1.5rem;
+      }
+      .required-text {
+        font-size: 0.9rem;
+      }
+      .status-box {
+        padding: 8px;
+      }
+      #bedrock-login-widget button {
+        padding: 0.5rem !important;
+        font-size: 0.8rem !important;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="noise-overlay"></div>
   <div class="scan-line"></div>
-  <div class="container">
-    <div class="header">
-      <h1>BACKRUSH: BR-482</h1>
-      <p>NEURAL INTERFACE <span class="required">REQUIRED</span></p>
-    </div>
-    <div id="bedrock-login-widget"></div>
-  </div>
+  <h1 class="error-title">BACKRUSH: BR-482</h1>
+  <p class="required-text">NEURAL INTERFACE REQUIRED</p>
+  <div id="bedrock-login-widget" class="status-box"></div>
 
   <!-- Required Dependencies -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -137,14 +261,14 @@
               enableGoogleLogin: true,
               enableEmailLogin: true,
             },
-            titleClass: "text-xl font-bold text-white",
+            titleClass: "tracking-tight text-xl font-bold text-white",
             logoClass: "ml-2 md:h-8 h-6",
-            panelClass: "container p-2 md:p-8 rounded-2xl max-w-[480px]",
-            buttonClass: "hover:border-orange-500 bg-[#050A0F] text-white border-[#00FF00]",
-            separatorTextClass: "text-gray-500",
+            panelClass: "border bg-black text-white shadow min-w-60 container p-2 md:p-8 rounded-2xl max-w-[480px]",
+            buttonClass: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 hover:border-orange-500 bg-[#050A0F] text-white border-[#00FF00]",
+            separatorTextClass: "text-white text-center font-bold text-sm",
             separatorClass: "bg-[#00FF00]",
             linkRowClass: "justify-center",
-            headerClass: "justify-center",
+            headerClass: "flex items-center justify-center",
           })
         )
       );
